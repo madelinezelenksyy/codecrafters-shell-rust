@@ -10,10 +10,16 @@ fn main() {
         let stdin = io::stdin();
         let mut input = String::new();
         stdin.read_line(&mut input).unwrap();
+
+        let (command, args) = input.trim().split_once(' ').unwrap_or((input.trim(), ""));
         
-        match input.trim() {
-            "exit 0" => break,
-            input if input.starts_with("echo ") => println!("{}", &input[5..]),
+        match command {
+            "echo" => println!("{}", args),
+            "exit" if args == 0 => process::exit(0),
+            "type" => match args {
+                "exit" | "echo" | "type" => println!("{} is a shell builtin", args),
+                _ => println!("{}: not found", args),
+            },
             &_ => {
                 println!("{}: command not found", input.trim());
                 input.clear();
