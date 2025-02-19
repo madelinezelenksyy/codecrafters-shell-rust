@@ -1,7 +1,7 @@
 #[allow(unused_imports)]
 use std::io::{self, Write};
 
-fn main() {
+fn main() -> u32 {
     loop {
         // Uncomment this block to pass the first stage
         print!("$ ");
