@@ -13,6 +13,9 @@ fn main() {
         
         match input.trim() {
             "exit 0" => break,
+            "echo" => {
+                println!("{}", input.trim());
+            },
             &_ => {
                 println!("{}: command not found", input.trim());
                 input.clear();
