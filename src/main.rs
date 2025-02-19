@@ -2,10 +2,10 @@
 use std::io::{self, Write};
 
 fn main() {
-    // Uncomment this block to pass the first stage
-    print!("$ ");
-    io::stdout().flush().unwrap();
     loop {
+        // Uncomment this block to pass the first stage
+        print!("$ ");
+        io::stdout().flush().unwrap();
         // Wait for user input
         let stdin = io::stdin();
         let mut input = String::new();
@@ -13,7 +13,5 @@ fn main() {
 
         println!("{}: command not found", input.trim());
         input.clear();
-
-        print!("$ ");
     }
 }
