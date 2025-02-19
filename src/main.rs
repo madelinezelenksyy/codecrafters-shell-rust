@@ -13,5 +13,7 @@ fn main() {
 
         println!("{}: command not found", input.trim());
         input.clear();
+
+        print!("$ ");
     }
 }
