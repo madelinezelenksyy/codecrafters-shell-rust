@@ -11,11 +11,12 @@ fn main() -> u32 {
         let mut input = String::new();
         stdin.read_line(&mut input).unwrap();
         
-        if(input != "exit") {
-        println!("{}: command not found", input.trim());
-        input.clear();
-        } else {
-            return 0;
+        match input.trim() {
+            "exit 0" => break,
+            &_ => {
+                println!("{}: command not found", input.trim());
+                input.clear();
+            }
         }
     }
 }
