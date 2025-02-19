@@ -12,7 +12,7 @@ fn main() {
         stdin.read_line(&mut input).unwrap();
         
         match input.trim() {
-            "exit 0" => break 0,
+            "exit 0" => break,
             &_ => {
                 println!("{}: command not found", input.trim());
                 input.clear();
