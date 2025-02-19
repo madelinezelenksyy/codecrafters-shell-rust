@@ -13,9 +13,7 @@ fn main() {
         
         match input.trim() {
             "exit 0" => break,
-            "echo" => {
-                println!("{}", input.trim());
-            },
+            input if input.starts_with("echo ") => println!("{}", &input[5..]),
             &_ => {
                 println!("{}: command not found", input.trim());
                 input.clear();
