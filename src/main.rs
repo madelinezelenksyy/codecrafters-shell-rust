@@ -15,7 +15,7 @@ fn main() {
         
         match command {
             "echo" => println!("{}", args),
-            "exit" if args == 0 => process::exit(0),
+            "exit" if args == "0" => process::exit(0),
             "type" => match args {
                 "exit" | "echo" | "type" => println!("{} is a shell builtin", args),
                 _ => println!("{}: not found", args),
