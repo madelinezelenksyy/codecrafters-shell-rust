@@ -1,7 +1,6 @@
 #[allow(unused_imports)]
 use std::io::{self, Write};
 use std::process;
-use std::process::Command;
 use pathsearch::find_executable_in_path;
 
 fn main() {
