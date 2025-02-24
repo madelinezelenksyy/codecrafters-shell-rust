@@ -1,6 +1,7 @@
 #[allow(unused_imports)]
 use std::io::{self, Write};
 use std::process;
+use std::process::Command;
 use pathsearch::find_executable_in_path;
 
 fn main() {
@@ -24,14 +25,16 @@ fn main() {
                 type_command(args);
             },
             &_ => {
-                println!("{}: command not found", input.trim());
-                input.clear();
+                if !run_external_commands(command, args) {
+                    println!("{}: command not found", input.trim());
+                    input.clear();
+                }
             }
         }
     }
 }
 
-fn type_command(argument: &str) {
+fn type_command(argument: &str){
     // println!("{argument}");
     let builtins: [&str; 3] = ["type", "exit", "echo"];
     if builtins.contains(&argument) {
@@ -42,5 +45,36 @@ fn type_command(argument: &str) {
     }
     else {
         println!("{argument}: not found");
+    }
+}
+
+fn run_external_commands(command: &str, args: &str) -> bool {
+    // Try to run an external command using `Command`
+    if let Some(executable) = find_executable_in_path(command) {
+        let output = Command::new(executable)
+            .arg(args) // Pass the arguments to the command
+            .output(); // Run the command and capture the output
+
+        match output {
+            Ok(output) => {
+                // Print standard output
+                if !output.stdout.is_empty() {
+                    print!("{}", String::from_utf8_lossy(&output.stdout));
+                }
+                // Print standard error
+                if !output.stderr.is_empty() {
+                    eprint!("{}", String::from_utf8_lossy(&output.stderr));
+                }
+                true
+            }
+            Err(_) => {
+                // If the command fails to run
+                println!("Error executing command");
+                false
+            }
+        }
+    } else {
+        // Command not found in the system's executable path
+        false
     }
 }
