@@ -4,6 +4,7 @@ use std::process;
 use std::process::Command;
 use pathsearch::find_executable_in_path;
 use std::env;
+use std::path::Path;
 
 fn main() {
     loop {
@@ -28,6 +29,9 @@ fn main() {
             "pwd" => {
                let _ = print_working_directory();
             },
+            "cd" => {
+                let _ = change_directory(args);
+            }
             &_ => {
             
                 if !run_external_commands(command, args) {
@@ -87,5 +91,11 @@ fn run_external_commands(command: &str, args: &str) -> bool {
 fn print_working_directory() -> Result<(), Box<dyn std::error::Error>> {
     let path = env::current_dir()?;
     println!("{}", path.display());
+    Ok(())
+}
+
+fn change_directory(path: &str) -> Result<(), Box<dyn std::error::Error>> {
+    let changed = Path::new(path);
+    env::set_current_dir(&changed)?;
     Ok(())
 }
