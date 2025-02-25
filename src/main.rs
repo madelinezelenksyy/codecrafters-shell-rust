@@ -3,6 +3,7 @@ use std::io::{self, Write};
 use std::process;
 use std::process::Command;
 use pathsearch::find_executable_in_path;
+use std::env;
 
 fn main() {
     loop {
@@ -24,6 +25,7 @@ fn main() {
             command if command.starts_with("type") => {
                 type_command(args);
             },
+            "pwd" => print_working_directory();
             &_ => {
             
                 if !run_external_commands(command, args) {
@@ -78,4 +80,9 @@ fn run_external_commands(command: &str, args: &str) -> bool {
         // Command not found in the system's executable path
         false
     }
+}
+
+fn print_working_directory() {
+    let path = env::current_dir();
+    println!("{path}");
 }
