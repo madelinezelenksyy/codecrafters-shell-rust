@@ -4,7 +4,7 @@ use std::process;
 use std::process::Command;
 use pathsearch::find_executable_in_path;
 use std::env;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 fn main() {
     loop {
@@ -95,10 +95,27 @@ fn print_working_directory() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn change_directory(path: &str) -> Result<(), Box<dyn std::error::Error>> {
-    let changed = Path::new(path);
-    if !changed.exists() {
+    let root = env::current_dir()?; //Get current directory
+    
+    //Check for relative path
+    let full_path = if Path::new(path).is_absolute() {
+        Path::new(path).to_path_buf()
+    } else {
+        root.join(path) //If the path is relative, combine current directory with the relative path
+    };
+    
+    //If the path doesn't exist, throw an error
+    if !full_path.exists() {
         println!("cd: {}: No such file or directory", path);
+        return Err(From::from("Path does not exist"));
     }
-    env::set_current_dir(&changed)?;
+
+    //If the path is not a directory, throw an error
+    if !full_path.is_dir() {
+        println!("cd: {}: Not a directory", path);
+        return Err(From::from("Path is not a directory"));
+    }
+
+    env::set_current_dir(&full_path)?; //Change to desired directory
     Ok(())
 }
