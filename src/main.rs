@@ -5,6 +5,7 @@ use std::process::Command;
 use pathsearch::find_executable_in_path;
 use std::env;
 use std::path::{Path, PathBuf};
+use dirs;
 
 fn main() {
     loop {
@@ -95,27 +96,32 @@ fn print_working_directory() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn change_directory(path: &str) -> Result<(), Box<dyn std::error::Error>> {
-    let root = env::current_dir()?; //Get current directory
-    
-    //Check for relative path
-    let full_path = if Path::new(path).is_absolute() {
-        Path::new(path).to_path_buf()
+    let path = if path.starts_with('~') {
+        let home_dir = dirs::home_dir().ok_or("Home directory not found")?;
+        let path = path.strip_prefix('~').unwrap_or(path); //Remove ~ symbol
+        home_dir.join(path)
     } else {
-        root.join(path) //If the path is relative, combine current directory with the relative path
+        // If the path doesn't start with '~', proceed as usual
+        let root = env::current_dir()?; //Get current directory
+        if Path::new(path).is_absolute() {
+            PathBuf::from(path) //If it's an absolute path
+        } else {
+            root.join(path) //For relative paths prefix with the current directory
+        }
     };
     
     //If the path doesn't exist, throw an error
-    if !full_path.exists() {
-        println!("cd: {}: No such file or directory", path);
+    if !path.exists() {
+        println!("cd: {}: No such file or directory", path.display());
         return Err(From::from("Path does not exist"));
     }
 
     //If the path is not a directory, throw an error
-    if !full_path.is_dir() {
-        println!("cd: {}: Not a directory", path);
+    if !path.is_dir() {
+        println!("cd: {}: Not a directory", path.display());
         return Err(From::from("Path is not a directory"));
     }
 
-    env::set_current_dir(&full_path)?; //Change to desired directory
+    env::set_current_dir(&path)?; //Change to desired directory
     Ok(())
 }
