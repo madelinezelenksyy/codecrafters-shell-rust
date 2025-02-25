@@ -41,7 +41,7 @@ fn main() {
 
 fn type_command(argument: &str){
     // println!("{argument}");
-    let builtins: [&str; 3] = ["type", "exit", "echo"];
+    let builtins: [&str; 4] = ["type", "exit", "echo", "pwd"];
     if builtins.contains(&argument) {
         println!("{argument} is a shell builtin");
     }
