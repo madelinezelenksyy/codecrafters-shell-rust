@@ -96,6 +96,9 @@ fn print_working_directory() -> Result<(), Box<dyn std::error::Error>> {
 
 fn change_directory(path: &str) -> Result<(), Box<dyn std::error::Error>> {
     let changed = Path::new(path);
+    if !changed.exists() {
+        println!("cd: {}: No such file or directory", path);
+    }
     env::set_current_dir(&changed)?;
     Ok(())
 }
