@@ -25,7 +25,9 @@ fn main() {
             command if command.starts_with("type") => {
                 type_command(args);
             },
-            "pwd" => print_working_directory();
+            "pwd" => {
+               let _ = print_working_directory();
+            },
             &_ => {
             
                 if !run_external_commands(command, args) {
@@ -53,7 +55,7 @@ fn type_command(argument: &str){
 
 fn run_external_commands(command: &str, args: &str) -> bool {
     // Try to run an external command using `Command`
-    if let Some(executable) = find_executable_in_path(command) {
+    if let Some(command) = find_executable_in_path(command) {
         let output = Command::new(command)
             .arg(args) // Pass the arguments to the command
             .output(); // Run the command and capture the output
@@ -82,7 +84,8 @@ fn run_external_commands(command: &str, args: &str) -> bool {
     }
 }
 
-fn print_working_directory() {
-    let path = env::current_dir();
-    println!("{path}");
+fn print_working_directory() -> Result<(), Box<dyn std::error::Error>> {
+    let path = env::current_dir()?;
+    println!("{}", path.display());
+    Ok(())
 }
