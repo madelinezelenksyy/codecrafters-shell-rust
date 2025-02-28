@@ -9,7 +9,7 @@ use dirs;
 
 fn main() {
     loop {
-        // Uncomment this block to pass the first stage
+        // Initial prompt
         print!("$ ");
         io::stdout().flush().unwrap();
         // Wait for user input
@@ -18,12 +18,14 @@ fn main() {
         stdin.read_line(&mut input).unwrap();
 
         let (command, args) = input.trim().split_once(' ').unwrap_or((input.trim(), ""));
-
-        // println!("{command} and {args}");
         
         match command {
-            "echo" => println!("{}", args),
+            "echo" => {
+                println!("{}", args);
+            } ,
+
             "exit" if args == "0" => process::exit(0),
+
             command if command.starts_with("type") => {
                 type_command(args);
             },
@@ -45,7 +47,7 @@ fn main() {
 }
 
 fn type_command(argument: &str){
-    // println!("{argument}");
+
     let builtins: [&str; 4] = ["type", "exit", "echo", "pwd"];
     if builtins.contains(&argument) {
         println!("{argument} is a shell builtin");
@@ -59,6 +61,7 @@ fn type_command(argument: &str){
 }
 
 fn run_external_commands(command: &str, args: &str) -> bool {
+
     // Try to run an external command using `Command`
     if let Some(executable) = find_executable_in_path(command) {
         let output = Command::new(command)
