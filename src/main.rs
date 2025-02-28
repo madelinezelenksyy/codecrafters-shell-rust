@@ -21,6 +21,7 @@ fn main() {
         
         match command {
             "echo" => {
+                
                 println!("{}", args);
             } ,
 
@@ -63,7 +64,7 @@ fn type_command(argument: &str){
 fn run_external_commands(command: &str, args: &str) -> bool {
 
     // Try to run an external command using `Command`
-    if let Some(executable) = find_executable_in_path(command) {
+    if let Some(_executable) = find_executable_in_path(command) {
         let output = Command::new(command)
             .arg(args) // Pass the arguments to the command
             .output(); // Run the command and capture the output
